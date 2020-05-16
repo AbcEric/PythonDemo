@@ -1,5 +1,4 @@
 # -*- Coding: utf-8 -*-
-
 """
 File: FCFNN-numpy.py
 
@@ -35,8 +34,12 @@ def initialize_with_zeros(dim):
 # 定义前向传播函数：
 def propagate(w, b, X, Y):
     m = X.shape[1]
+    print(m)
     A = sigmoid(np.dot(w.T, X) + b)
+    # print(A, w.T, X, b)
+
     cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1 - A))
+
     dw = np.dot(X, (A - Y).T) / m
     db = np.sum(A - Y) / m
     assert (dw.shape == w.shape)
@@ -93,6 +96,7 @@ def model(X_train, Y_train, X_test, Y_test, num_iterations=2000, learning_rate=0
     # initialize parameters with zeros (≈ 1 line of code)
     w, b = initialize_with_zeros(X_train.shape[0])    # Gradient descent (≈ 1 line of code)
     # Retrieve parameters w and b from dictionary "parameters"
+    print("shape=", X_train.shape[0])
     parameters, grads, costs = backward_propagation(w, b, X_train, Y_train, num_iterations, learning_rate, print_cost)
     w = parameters["w"]
     b = parameters["b"]    # Predict test/train set examples (≈ 2 lines of code)
@@ -110,3 +114,14 @@ def model(X_train, Y_train, X_test, Y_test, num_iterations=2000, learning_rate=0
     return d
 
 
+if __name__ == '__main__':
+    x_data = np.random.randint(low=0, high=10, size=(1000, 3))
+    y_data = []
+
+    for i in range(1000):
+        y = x_data[i][0]*x_data[i][0] + 2*x_data[i][1] - 0.5*x_data[i][2] + 3
+        y_data.append(y)
+        # print(x_data[i], y_data)
+
+    # print(x_data[800:1000], y_data[800:1000])
+    model(x_data[0:800].T, y_data[0:800], x_data[800:1000].T, y_data[800:1000], num_iterations=2000, learning_rate=0.5, print_cost=False)
